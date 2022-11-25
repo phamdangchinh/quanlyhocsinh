@@ -239,7 +239,6 @@ float Diem::getHoa(){
 class HocSinh: public Diem{
 	private:
 	  string   Lop , MSHS;
-	  int STT;
     public:
     	HocSinh();
     	HocSinh( string Lop, string MSHS);
@@ -248,8 +247,7 @@ class HocSinh: public Diem{
 	    void Xuat4();
         void Xuat5();
 	    string getMSHS();
-	    void setSTT(int STT);
-        int getSTT();
+	  
 };
 HocSinh::HocSinh():Diem(){
 	Lop ="";
@@ -272,12 +270,7 @@ HocSinh::~HocSinh(){
     fflush(stdin);
     getline(cin,MSHS);
 }
-void HocSinh::setSTT(int STT){
-    this->STT=STT;
-}
-int HocSinh::getSTT(){
-    return STT;
-}
+
 void HocSinh::Xuat4(){
 	
     cout<<endl<<setw(30)<<left<<Ten<<setw(15)<<left<<DiaChi<<setw(15)<<left<<MSHS<<left<<Ngay<<"/"<<Thang<<"/"<<setw(12)<<left<<Nam<<setw(17)<<left<<Toan<<setw(15)<<left<<Ly<<setw(15)<<left<<Hoa<<setw(15)<<left<<DTB<<endl;
@@ -303,7 +296,8 @@ class quanlyHS{
             void TimKiemID(string &h);	
             void SapXepDTB();
             void SapXepName();
-            void XepLoaiHS(); 	
+            void XepLoaiHS();
+			void XepLoaiHSG(); 	
             void exportHS(ofstream &file); 
             bool check (string h);
 };
@@ -347,10 +341,20 @@ void quanlyHS:: XuatDS(){
 	 int stt = 1;
     XuatThongTinChung();
 	for(int i = 0 ;i < this->HS.size();i++){
-		this->HS.at(i)->setSTT(stt);
+	
 		this->HS.at(i)->Xuat4();
 		 stt++;
 	}
+} 
+void quanlyHS::XepLoaiHSG(){
+	XuatThongTinChung2();
+	for(int i = 0;i < this->HS.size();i ++){
+		if(HS.at(i)->getDTB() >= 8){
+			HS.at(i)->Xuat5(); cout<<setw(15)<<left<<"GIOI \n";
+            cout<<"\t\t\t"<<setfill('-')<<setw(150)<<"-"<<endl;
+            cout<<setfill(' ');
+		} 
+	} 
 } 
 void quanlyHS::SapXepDTB(){
 	for(int i = 0 ;i < this->HS.size()-1;i++){
@@ -387,7 +391,6 @@ void quanlyHS::XoaHSID(string H){
         }
     }    
 }
-
 
      
 void quanlyHS::XepLoaiHS(){
@@ -432,14 +435,14 @@ void quanlyHS::TimKiemID(string &h){
 		}
 	}
 }
+
 void quanlyHS::exportHS(ofstream &file){
     int stt = 1;
     file<<endl<<"THONG TIN HOC SINH \n"<<endl;
    	file<<setw(30)<<left<<"Ten"<<setw(15)<<left<<"Dia Chi"<<setw(15)<<left<<"MSHS"<<setw(15)<<left<<"Ngay Sinh"<<setw(18)<<left<<"Toan "<<setw(15)<<left<<"Ly"<<setw(15)<<left<<"Hoa"<<setw(15)<<"DTB"<<endl;
    	file<<setw(150)<<setfill('_')<<"_"<<endl;
     file<<setfill(' ');
-	for(int i = 0 ;i < this->HS.size();i++){
-		this->HS.at(i)->setSTT(stt);
+	for(int i = 0 ;i < this->HS.size();i++){	
 		file<<endl<<setw(30)<<left<<HS.at(i)->getTen()<<setw(15)<<left<<HS.at(i)->getDiaChi()<<setw(15)<<left<<HS.at(i)->getMSHS()<<left<<HS.at(i)->getNgay()<<"/"<<HS.at(i)->getThang()<<"/"<<setw(12)<<left<<HS.at(i)->getNam()<<setw(15)<<left<<HS.at(i)->getToan()<<setw(15)<<left<<HS.at(i)->getLy()<<setw(15)<<left<<HS.at(i)->getHoa()<<setw(15)<<left<<HS.at(i)->getDTB()<<endl;
         file<<setfill('-')<<setw(150)<<"-"<<endl;
         file<<setfill(' ');
@@ -470,6 +473,7 @@ void menu(){
         cout  << "**              6. Xep loai hoc sinh.                            **\n";  
         cout  << "**              7. Sap xep hoc sinh theo ten.                    **\n";
         cout  << "**              8. Ghi danh sach hoc sinh vao file.              **\n";
+        cout  << "**              9. Xuat thong tin hoc sinh gioi                  **\n";
         cout  << "**              0. Thoat.                                        **\n";
         cout  << "*******************************************************************\n";
         cout  << "                         Nhap tuy chon: ";
@@ -579,6 +583,18 @@ void menu(){
              	system("cls");
                 k.exportHS(file);
                 break;
+            case 9:
+            		system("cls");
+			        if(daNhap){
+                       cout<<"\n\n Ban da chon xuat thong tin hoc sinh gioi: " ;  
+					   k.XepLoaiHSG();               
+				    }
+			         else{
+                       cout<<"Nhap danh sach hoc sinh truoc!!!!";
+                     }
+                      cout<<"\nBam phim bat ky de tiep tuc!";
+                      getch();
+                      break;
             case 0:
 		            printf("\n BAN DA CHON THOAT CHUONG TRINH!");
 		            flat = 0;
